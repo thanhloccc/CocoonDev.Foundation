@@ -1,5 +1,5 @@
-using System.Text;
 using Cysharp.Text;
+using PrimeTween;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -120,6 +120,10 @@ namespace CocoonDev.Foundation
                     _textAmount.TrySetText(stringBuiler);
                 }
             }
+
+            var sequence = Sequence.Create()
+                .Chain(Tween.Scale(_rectTransform, 1.1F, 0.15F, Ease.OutQuad))
+                .Chain(Tween.Scale(_rectTransform, 1, 0.15F, Ease.InQuad));
         }
     }
 }
