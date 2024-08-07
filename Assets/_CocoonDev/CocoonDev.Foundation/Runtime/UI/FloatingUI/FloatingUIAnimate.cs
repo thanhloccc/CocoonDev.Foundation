@@ -94,17 +94,15 @@ namespace CocoonDev.Foundation
         {
             Sequence sequence = Sequence.Create();
 
-            sequence.Chain(Tween.Position(rectTransform
+            await sequence.Chain(Tween.Position(rectTransform
                 , finalPotion
-                , duration, Ease.InQuad)).GetAwaiter();
-
-            sequence.Group(Tween.Alpha(canvasGroup
+                , duration, Ease.InQuad))
+                .Group(Tween.Alpha(canvasGroup
                 , 0
                 , 0.2F
                 , Ease.OutQuad
-                , startDelay: duration - 0.2F)).GetAwaiter();
-
-            await sequence.OnComplete(onComplete).WithCancellation(token);
+                , startDelay: duration - 0.2F))
+                .OnComplete(() => onComplete?.Invoke());
         }
     }
 }
