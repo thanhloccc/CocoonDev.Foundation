@@ -64,21 +64,24 @@ namespace CocoonDev.Foundation
                 await s_pool.Prepool(this.GetCancellationTokenOnDestroy());
         }
 
-        public static void Push(FloatingOptions options, FloatingUIData data)
+        public static void Push(Vector2 originPosition, FloatingOptions options, FloatingUIData data)
         {
-            PushAndForget(options, data).Forget();
+            PushAndForget(originPosition, options, data).Forget();
         }
 
-        public static async UniTaskVoid PushAndForget(FloatingOptions options
+        public static async UniTaskVoid PushAndForget(Vector2 originPosition
+            , FloatingOptions options
             , FloatingUIData data)
         {
-            await PushAsync(options, data);
+            await PushAsync(originPosition, options, data);
         }
 
-        public static async UniTask PushAsync(FloatingOptions options
+        public static async UniTask PushAsync(Vector2 originPosition
+            , FloatingOptions options
             , FloatingUIData data)
         {
             var instance = await s_pool.Rent();
+            instance.SetPosition(originPosition);
             instance.gameObject.SetActive(true);
           
             await instance.InitializeAsync(options);

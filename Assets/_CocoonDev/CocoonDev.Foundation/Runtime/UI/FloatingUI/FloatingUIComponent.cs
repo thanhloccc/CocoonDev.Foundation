@@ -13,12 +13,12 @@ namespace CocoonDev.Foundation
         [SerializeField, Required]
         private CanvasGroup _canvasGroup;
 
-        public void Initialize(FloatingOptions options)
+        public void Initialize( FloatingOptions options)
         {
-            InitializeAndForget(options).Forget();
+            InitializeAndForget( options).Forget();
         }
 
-        public async UniTaskVoid InitializeAndForget(FloatingOptions options)
+        public async UniTaskVoid InitializeAndForget( FloatingOptions options)
         {
             await InitializeAsync(options);
         }
@@ -32,6 +32,10 @@ namespace CocoonDev.Foundation
                 , token);
         }
 
+        public void SetPosition(Vector2 originPosition)
+        {
+            _rectTransform.position = originPosition;
+        }
 
         public void OnReturnToPool()
         {
