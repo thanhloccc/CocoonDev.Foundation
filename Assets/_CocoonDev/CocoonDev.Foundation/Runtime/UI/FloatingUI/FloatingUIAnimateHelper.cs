@@ -1,4 +1,3 @@
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -32,8 +31,7 @@ namespace CocoonDev.Foundation
 
         public static async UniTask FloatingAsync([NotNull] RectTransform rectTransform
             , [NotNull] CanvasGroup canvasGroup
-            , FloatingOptions options
-            , CancellationToken token)
+            , FloatingOptions options)
         {
             switch (options.FloatingMode)
             {
@@ -42,11 +40,11 @@ namespace CocoonDev.Foundation
                     break;
 
                 case FloatingMode.Parabolic:
-                    await FloatingParabolicAsync(rectTransform, canvasGroup, options.Settings, token);
+                    await FloatingParabolicAsync(rectTransform, canvasGroup, options.Settings);
                     break;
 
                 case FloatingMode.Verticel:
-                    await FloatingVerticleAsync(rectTransform, canvasGroup, options.Settings, token);
+                    await FloatingVerticleAsync(rectTransform, canvasGroup, options.Settings);
                     break;
 
                 default:

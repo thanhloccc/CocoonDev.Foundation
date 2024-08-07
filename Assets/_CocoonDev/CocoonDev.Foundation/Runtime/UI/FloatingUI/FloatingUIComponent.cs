@@ -25,11 +25,9 @@ namespace CocoonDev.Foundation
 
         public async UniTask InitializeAsync(FloatingOptions options)
         {
-            var token = this.GetCancellationTokenOnDestroy();
             await FloatingUIAnimateHelper.FloatingAsync(_rectTransform
                 , _canvasGroup
-                , options
-                , token);
+                , options);
         }
 
         public void SetPosition(Vector2 originPosition)
