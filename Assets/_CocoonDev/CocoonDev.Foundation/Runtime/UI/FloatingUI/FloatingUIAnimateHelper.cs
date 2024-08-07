@@ -78,30 +78,26 @@ namespace CocoonDev.Foundation
 
         public static async UniTask FloatingParabolicAsync([NotNull] RectTransform rectTransform
             , [NotNull] CanvasGroup canvasGroup
-            , FloatingSettings settings
-            , CancellationToken token)
+            , FloatingSettings settings)
         {
 
             await FloatingUIAnimate.FloatingParabolicAsync(rectTransform
                        , canvasGroup
                        , settings.FinalPosition
                        , settings.Duration
-                       , settings.OnComplete
-                       , token);
+                       , settings.OnComplete);
         }
 
         public static async UniTask FloatingVerticleAsync([NotNull] RectTransform rectTransform
             , [NotNull] CanvasGroup canvasGroup
-            , FloatingSettings settings
-            , CancellationToken token)
+            , FloatingSettings settings)
         {
 
             await FloatingUIAnimate.FloatingVerticalAsync(rectTransform
                        , canvasGroup
                        , settings.FinalPosition
                        , settings.Duration
-                       , settings.OnComplete
-                       , token);
+                       , settings.OnComplete);
         }
 
     }

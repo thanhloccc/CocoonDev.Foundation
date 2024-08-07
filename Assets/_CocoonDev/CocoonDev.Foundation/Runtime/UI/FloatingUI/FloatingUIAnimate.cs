@@ -67,8 +67,7 @@ namespace CocoonDev.Foundation
             , CanvasGroup canvasGroup
             , Vector2 finalPotion
             , float duration
-            , Action onComplete
-            , CancellationToken token)
+            , Action onComplete)
         {
             Sequence sequence = Sequence.Create();
 
@@ -80,8 +79,7 @@ namespace CocoonDev.Foundation
                 , 0.2F
                 , Ease.OutQuad
                 , startDelay: duration - 0.2F))
-                .OnComplete(() => onComplete?.Invoke())
-                .WithCancellation(token);
+                .OnComplete(() => onComplete?.Invoke());
            
         }
 
@@ -89,8 +87,7 @@ namespace CocoonDev.Foundation
             , CanvasGroup canvasGroup
             , Vector2 finalPotion
             , float duration
-            , Action onComplete
-            , CancellationToken token)
+            , Action onComplete)
         {
             Sequence sequence = Sequence.Create();
 
@@ -102,8 +99,7 @@ namespace CocoonDev.Foundation
                 , 0.2F
                 , Ease.OutQuad
                 , startDelay: duration - 0.2F))
-                .OnComplete(() => onComplete?.Invoke())
-                .WithCancellation(token);
+                .OnComplete(() => onComplete?.Invoke());
         }
     }
 }
