@@ -79,7 +79,7 @@ namespace CocoonDev.Foundation
             , FloatingSettings settings)
         {
 
-            await FloatingUIAnimate.FloatingParabolicAsync(rectTransform
+            await new FloatingUIAnimate().FloatingParabolicAsync(rectTransform
                        , canvasGroup
                        , settings.FinalPosition
                        , settings.Duration
@@ -91,7 +91,7 @@ namespace CocoonDev.Foundation
             , FloatingSettings settings)
         {
 
-            await FloatingUIAnimate.FloatingVerticalAsync(rectTransform
+            await new FloatingUIAnimate().FloatingVerticalAsync(rectTransform
                        , canvasGroup
                        , settings.FinalPosition
                        , settings.Duration

@@ -63,7 +63,7 @@ namespace CocoonDev.Foundation
             return new FloatingUIAnimate();
         }
 
-        public static async UniTask FloatingParabolicAsync(RectTransform rectTransform
+        public async UniTask FloatingParabolicAsync(RectTransform rectTransform
             , CanvasGroup canvasGroup
             , Vector2 finalPotion
             , float duration
@@ -85,7 +85,7 @@ namespace CocoonDev.Foundation
 
         }
 
-        public static async UniTask FloatingVerticalAsync(RectTransform rectTransform
+        public async UniTask FloatingVerticalAsync(RectTransform rectTransform
             , CanvasGroup canvasGroup
             , Vector2 finalPotion
             , float duration
