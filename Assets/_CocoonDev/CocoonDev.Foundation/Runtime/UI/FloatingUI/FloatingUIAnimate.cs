@@ -15,17 +15,24 @@ namespace CocoonDev.Foundation
         {
             Sequence sequence = Sequence.Create();
 
-            Vector2 positionCircle = (Vector2)rectTransform.position;
-            positionCircle = positionCircle.RandomPositionInCircle(250);
+            Vector2 originPosition = rectTransform.position;
+            Vector2 positionCircle = originPosition.RandomPositionInCircle(250);
 
-            float totalDuration = duration;
-            float durationPath1 = totalDuration * 30 / 100;
-            float durationPath2 = totalDuration * 70 / 100;
-
-            await sequence.Chain(Tween.Position(rectTransform, positionCircle, durationPath1, Ease.InQuad))
-                 .Chain(Tween.Position(rectTransform, finalPotion, durationPath2, Ease.InQuad))
-                 .Group(Tween.Alpha(canvasGroup, 0, 0.2F, Ease.OutQuad, startDelay: duration - 0.2F))
-                 .OnComplete(() => onComplete?.Invoke());
+            sequence = Sequence.Create();
+            await sequence.Chain(Tween.Position(rectTransform
+                , positionCircle
+                , duration * 30 / 100 
+                , Ease.InQuad))
+            .Chain(Tween.Position(rectTransform
+                , finalPotion
+                , duration * 70 / 100
+                , Ease.OutQuad))
+            .Group(Tween.Alpha(canvasGroup
+                , 0
+                , 0.2F
+                , Ease.OutQuad
+                , startDelay: duration - 0.2F))
+            .OnComplete(() => onComplete?.Invoke());
 
         }
 
