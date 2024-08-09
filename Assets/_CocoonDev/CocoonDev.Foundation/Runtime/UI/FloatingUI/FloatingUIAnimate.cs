@@ -74,8 +74,7 @@ namespace CocoonDev.Foundation
             Vector2 positionCircle = (Vector2)rectTransform.position;
             positionCircle = positionCircle.RandomPositionInCircle(250);
 
-            await sequence.Chain(Tween.Position(rectTransform, positionCircle, duration - 1.0F, Ease.InQuad))
-                .Chain(Tween.Position(rectTransform, finalPotion, duration - 0.35F, Ease.InQuad))
+            await sequence.Chain(Tween.Position(rectTransform, finalPotion, duration - 0.35F, Ease.InQuad))
                .Group(Tween.Alpha(canvasGroup
                 , 0
                 , 0.2F
