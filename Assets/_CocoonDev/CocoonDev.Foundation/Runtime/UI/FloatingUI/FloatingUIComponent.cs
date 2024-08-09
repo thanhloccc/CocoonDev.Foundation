@@ -1,6 +1,10 @@
+using Cysharp.Text;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
+using TMPro;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CocoonDev.Foundation
 {
@@ -12,6 +16,11 @@ namespace CocoonDev.Foundation
         private RectTransform _rectTransform;
         [SerializeField, Required]
         private CanvasGroup _canvasGroup;
+
+        [SerializeField, Required]
+        private Image _icon;
+        [SerializeField, Required]
+        private TextMeshProUGUI _valueText;
 
         public void Initialize( FloatingOptions options)
         {
@@ -28,6 +37,20 @@ namespace CocoonDev.Foundation
             await FloatingUIAnimateHelper.FloatingAsync(_rectTransform
                 , _canvasGroup
                 , options);
+        }
+
+        public void SetUIData(FloatingUIData data)
+        {
+            // ZString
+            using (var sb = ZString.CreateStringBuilder())
+            {
+                sb.Append('+');
+                sb.Append(Mathf.CeilToInt(data.Value));
+                _valueText.TrySetText(sb);
+            }
+
+            _icon.sprite = data.Icon;
+            _icon.SetNativeSize();
         }
 
         public void SetPosition(Vector2 originPosition)

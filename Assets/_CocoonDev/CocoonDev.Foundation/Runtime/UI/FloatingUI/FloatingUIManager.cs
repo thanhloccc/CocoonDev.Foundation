@@ -81,6 +81,7 @@ namespace CocoonDev.Foundation
             , FloatingUIData data)
         {
             var instance = await s_pool.Rent();
+            instance.SetUIData(data);
             instance.SetPosition(originPosition);
             instance.gameObject.SetActive(true);
           
