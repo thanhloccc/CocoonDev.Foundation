@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using PrimeTween;
 using UnityEngine;
@@ -8,61 +7,6 @@ namespace CocoonDev.Foundation
 {
     internal struct FloatingUIAnimate
     {
-        public static FloatingUIAnimate FloatingParabolic(RectTransform rectTransform
-            , CanvasGroup canvasGroup
-            , Vector2 finalPotion
-            , float duration
-            , Action onComplete)
-        {
-            Vector2 originPosition = rectTransform.position;
-            Vector2 positionCircle = originPosition.RandomPositionInCircle(250);
-
-            Sequence sequence = Sequence.Create();
-
-            sequence.Chain(Tween.Position(rectTransform
-                , positionCircle
-                , duration - 1.0F
-                , Ease.InQuad));
-
-            sequence.Chain(Tween.Position(rectTransform
-                , finalPotion
-                , duration - 0.35F
-                , Ease.OutQuad));
-
-            sequence.Group(Tween.Alpha(canvasGroup
-                , 0
-                , 0.2F
-                , Ease.OutQuad
-                , startDelay: duration - 0.2F));
-
-            sequence.OnComplete(onComplete);
-
-            return new FloatingUIAnimate();
-        }
-
-        public static FloatingUIAnimate FloatingVertical(RectTransform rectTransform
-            , CanvasGroup canvasGroup
-            , Vector2 finalPotion
-            , float duration
-            , Action onComplete)
-        {
-            Sequence sequence = Sequence.Create();
-
-            sequence.Chain(Tween.Position(rectTransform
-                , finalPotion
-                , duration, Ease.InQuad));
-
-            sequence.Group(Tween.Alpha(canvasGroup
-                , 0
-                , 0.2F
-                , Ease.OutQuad
-                , startDelay: duration - 0.2F));
-
-            sequence.OnComplete(onComplete);
-
-            return new FloatingUIAnimate();
-        }
-
         public async UniTask FloatingParabolicAsync(RectTransform rectTransform
             , CanvasGroup canvasGroup
             , Vector2 finalPotion
@@ -74,13 +18,14 @@ namespace CocoonDev.Foundation
             Vector2 positionCircle = (Vector2)rectTransform.position;
             positionCircle = positionCircle.RandomPositionInCircle(250);
 
-            await sequence.Chain(Tween.Position(rectTransform, finalPotion, duration - 0.35F, Ease.InQuad))
-               .Group(Tween.Alpha(canvasGroup
-                , 0
-                , 0.2F
-                , Ease.OutQuad
-                , startDelay: duration - 0.2F))
-                .OnComplete(() => onComplete?.Invoke());
+            float totalDuration = duration;
+            float durationPath1 = totalDuration * 30 / 100;
+            float durationPath2 = totalDuration * 70 / 100;
+
+            await sequence.Chain(Tween.Position(rectTransform, positionCircle, durationPath1, Ease.InQuad))
+                 .Chain(Tween.Position(rectTransform, finalPotion, durationPath2, Ease.InQuad))
+                 .Group(Tween.Alpha(canvasGroup, 0, 0.2F, Ease.OutQuad, startDelay: duration - 0.2F))
+                 .OnComplete(() => onComplete?.Invoke());
 
         }
 

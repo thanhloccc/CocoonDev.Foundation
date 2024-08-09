@@ -6,29 +6,6 @@ namespace CocoonDev.Foundation
 {
     public sealed class FloatingUIAnimateHelper
     {
-        public static void Floating([NotNull] RectTransform rectTransform
-            , [NotNull] CanvasGroup canvasGroup
-            , FloatingOptions options)
-        {
-            switch (options.FloatingMode)
-            {
-                case FloatingMode.None:
-                    Debug.LogWarning("[FloatingUI]");
-                    break;
-
-                case FloatingMode.Parabolic:
-                    FloatingParabolic(rectTransform, canvasGroup, options.Settings);
-                    break;
-
-                case FloatingMode.Verticel:
-                    FloatingVerticle(rectTransform, canvasGroup, options.Settings);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
         public static async UniTask FloatingAsync([NotNull] RectTransform rectTransform
             , [NotNull] CanvasGroup canvasGroup
             , FloatingOptions options)
@@ -51,28 +28,7 @@ namespace CocoonDev.Foundation
                     break;
             }
         }
-
-        public static void FloatingParabolic([NotNull] RectTransform rectTransform
-            , [NotNull] CanvasGroup canvasGroup
-            , FloatingSettings settings)
-        {
-            FloatingUIAnimate.FloatingParabolic(rectTransform
-                       , canvasGroup
-                       , settings.FinalPosition
-                       , settings.Duration
-                       , settings.OnComplete);
-        }
-
-        public static void FloatingVerticle([NotNull] RectTransform rectTransform
-            , [NotNull] CanvasGroup canvasGroup
-            , FloatingSettings settings)
-        {
-            FloatingUIAnimate.FloatingVertical(rectTransform
-                       , canvasGroup
-                       , settings.FinalPosition
-                       , settings.Duration
-                       , settings.OnComplete);
-        }
+       
 
         public static async UniTask FloatingParabolicAsync([NotNull] RectTransform rectTransform
             , [NotNull] CanvasGroup canvasGroup
