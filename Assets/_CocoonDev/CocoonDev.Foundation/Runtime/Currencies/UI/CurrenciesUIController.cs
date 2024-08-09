@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CocoonDev.Foundation
 {
-    public class CurrenciesUIController : MonoBehaviour
+    public class CurrenciesUIController : Singleton<CurrenciesUIController>
     {
         [SerializeField]
         private CurrencyUIPanel[] _currencyUIPanels;
