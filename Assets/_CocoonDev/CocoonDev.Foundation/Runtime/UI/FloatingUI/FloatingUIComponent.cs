@@ -46,11 +46,12 @@ namespace CocoonDev.Foundation
         public void SetPosition(Vector2 originPosition)
         {
             _rectTransform.position = originPosition;
+            _canvasGroup.alpha = 1;
         }
 
         public void OnReturnToPool()
         {
-            _rectTransform.position = Vector2.zero;
+            
           
         }
 
