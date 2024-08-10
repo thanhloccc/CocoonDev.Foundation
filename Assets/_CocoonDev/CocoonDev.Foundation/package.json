@@ -1,7 +1,7 @@
 {
     "name": "com.cocoondev.foundation",
     "displayName": "CocoonDev.Foundation",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "unity": "2022.3",
     "documentationUrl": "https://github.com/thanhloccc/CocoonDev.Foundation.Advertisement",
     "dependencies": {
