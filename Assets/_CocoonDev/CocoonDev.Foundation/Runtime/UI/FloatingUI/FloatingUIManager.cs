@@ -20,29 +20,34 @@ namespace CocoonDev.Foundation
         [SerializeField, Required]
         private Transform _parentPool;
 
-        private bool _initialized;
-        private bool _initializedPool;
+        private static bool s_initialized;
 
         private static ComponentPool<FloatingUIComponent, ComponentPrefab<FloatingUIComponent>> s_pool;
         private static CancellationTokenSource s_loadingCts;
 
+
+#if UNITY_EDITOR
+        /// <seealso href="https://docs.unity3d.com/Manual/DomainReloading.html"/>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            s_initialized = false;
+        }
+#endif
+
         #region Unity Methods
         private void Awake()
         {
-            if (_initialized)
+            if (s_initialized)
                 return;
 
             s_instance = this;
-            _initialized = true;
+            s_initialized = true;
         }
 
         private async void Start()
         {
-            if (_initializedPool)
-                return;
-
             await InitializePoolAsync();
-            _initializedPool = true;
         }
 
         private void OnDestroy()
@@ -64,20 +69,20 @@ namespace CocoonDev.Foundation
                 await s_pool.Prepool(this.GetCancellationTokenOnDestroy());
         }
 
-        public static void Push(Vector2 originPosition, FloatingOptions options, FloatingUIData data)
+        public static void Push(Vector2 originPosition, FloatingSettings settings, FloatingUIData data)
         {
-            PushAndForget(originPosition, options, data).Forget();
+            PushAndForget(originPosition, settings, data).Forget();
         }
 
         public static async UniTaskVoid PushAndForget(Vector2 originPosition
-            , FloatingOptions options
+            , FloatingSettings settings
             , FloatingUIData data)
         {
-            await PushAsync(originPosition, options, data);
+            await PushAsync(originPosition, settings, data);
         }
 
         public static async UniTask PushAsync(Vector2 originPosition
-            , FloatingOptions options
+            , FloatingSettings settings
             , FloatingUIData data)
         {
             var instance = await s_pool.Rent();
@@ -85,7 +90,7 @@ namespace CocoonDev.Foundation
             instance.SetPosition(originPosition);
             instance.gameObject.SetActive(true);
           
-            await instance.InitializeAsync(options);
+            await instance.InitializeAsync(settings);
             s_instance.ReturnToPool(instance);
         }
 

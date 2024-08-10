@@ -1,5 +1,4 @@
 using Cysharp.Text;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace CocoonDev.Foundation
@@ -9,6 +8,8 @@ namespace CocoonDev.Foundation
     {
         [SerializeField]
         private CurrencyType _currencyType;
+        [SerializeField]
+        private int _amount;
 
         public CurrencyType CurrencyType
         {
@@ -17,43 +18,21 @@ namespace CocoonDev.Foundation
 
         public int Amount
         {
-            get => _currentSave.Amount;
-            set => _currentSave.Amount = value;
+            get => _amount;
+            set => _amount = value;
         }
 
         public Utf16ValueStringBuilder AmountFormatted
         {
-            get => CurrenciesHelper.Format(_currentSave.Amount);
+            get => CurrenciesHelper.Format(_amount);
         }
 
         public event CurrencyChangeDelegate OnCurrencyChange;
-        private CurrentSave _currentSave;
-
-        public void Initialize()
-        {
-
-        }
+       
 
         public void InvokeChangeEvent(int difference)
         {
             OnCurrencyChange?.Invoke(this, difference);
-        }
-    }
-
-    [System.Serializable]
-    public class CurrentSave
-    {
-        public int amount;
-
-        public CurrentSave(int amount)
-        {
-            this.amount = amount;
-        }
-
-        public int Amount
-        {
-            get => amount;
-            set => amount = value;
         }
     }
 

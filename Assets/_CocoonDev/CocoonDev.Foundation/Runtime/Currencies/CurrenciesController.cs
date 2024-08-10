@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,171 +8,171 @@ namespace CocoonDev.Foundation
         private static CurrenciesController s_instance;
 
         [SerializeField]
-        private CurrenciesDatabase _currenciesDatabase;
+        private Currency[] _currencies;
 
-        private static ReadOnlyMemory<Currency> s_currencies;
-        public static ReadOnlyMemory<Currency> Currencies
-        {
-            get => s_currencies;
-        }
-
-        private static readonly Dictionary<CurrencyType, int> s_currenciesLinks = new Dictionary<CurrencyType, int>();
+        private static Dictionary<CurrencyType, Currency> s_currenyCacheBuyId = new Dictionary<CurrencyType, Currency>();
 
         private static bool s_isInitialized;
-        private static event Action onInital;
+
+#if UNITY_EDITOR
+        /// <seealso href="https://docs.unity3d.com/Manual/DomainReloading.html"/>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            s_isInitialized = false;
+            s_currenyCacheBuyId = new();
+        }
+   #endif
 
         private void Awake()
         {
             Initialize();
+            LoadCurrency();
         }
 
-        public virtual void Initialize()
+        private void OnApplicationFocus(bool focus)
+        {
+#if !UNITY_EDITOR
+            if (!focus)
+            {
+                SaveCurrency();
+            }
+#endif
+        }
+
+
+        private void OnDestroy()
+        {
+#if UNITY_EDITOR
+            SaveCurrency();
+#endif
+        }
+
+        public void Initialize()
         {
             if (s_isInitialized)
                 return;
 
             s_instance = this;
-
-            // Inialize database
-            //_currenciesDatabase.Initialize();
-
-            // Store active currencies
-            s_currencies = _currenciesDatabase.Currencies;
-
-            // Link currecies by the type
-            for (int i = 0; i < s_currencies.Length; i++)
+           
+            for (int i = 0; i < _currencies.Length; i++)
             {
-                if (!s_currenciesLinks.ContainsKey(s_currencies.Span[i].CurrencyType))
+                if (!s_currenyCacheBuyId.ContainsKey(_currencies[i].CurrencyType))
                 {
-                    s_currenciesLinks.Add(s_currencies.Span[i].CurrencyType, i);
+                    s_currenyCacheBuyId.Add(_currencies[i].CurrencyType, _currencies[i]);
                 }
                 else
                 {
-                    Debug.LogError(string.Format("[Currency Syste]: Currency with type {0} added to database twice!", s_currencies.Span[i].CurrencyType));
+                    Debug.LogError(string.Format("[Currency Syste]: Currency with type {0} added to database twice!", _currencies[i].CurrencyType));
                 }
             }
 
             s_isInitialized = true;
 
-            onInital?.Invoke();
-            onInital = null;
-
         }
 
+        #region Static Methods
         public static bool HasAmount(CurrencyType currencyType, int amount)
         {
-            int link = FindLinkByType(currencyType);
-            if (link == -1)
+            if (s_currenyCacheBuyId.TryGetValue(currencyType, out var currency))
             {
-                Debug.LogError("Not found");
-                return false;
+                return currency.Amount >= amount;
             }
 
-            return s_currencies.Span[link].Amount >= amount;
+
+            return false;
         }
 
-        public static int GetAmountByType(CurrencyType currencyType)
+        public static int GetAmountById(CurrencyType currencyType)
         {
-            int link = FindLinkByType(currencyType);
-            if (link == -1)
+            if (s_currenyCacheBuyId.TryGetValue(currencyType, out var currency))
             {
-                Debug.LogError("Not found");
-                return -1;
+                return currency.Amount;
             }
-            return s_currencies.Span[link].Amount;
+
+            return 0;
         }
 
-        public static Currency GetCurrencyByType(CurrencyType currencyType)
+        public static Currency Of(CurrencyType currencyType)
         {
-            int link = FindLinkByType(currencyType);
-            if (link == -1)
+            if (s_currenyCacheBuyId.TryGetValue(currencyType, out var currency))
             {
-                Debug.LogError("Not found");
-                return null;
+                return currency;
             }
 
-            return s_currencies.Span[link];
+            return null;
         }
 
         public static void Set(CurrencyType currencyType, int amount)
         {
-            int link = FindLinkByType(currencyType);
-            if (link == -1)
+            if (s_currenyCacheBuyId.TryGetValue(currencyType, out var currency))
             {
-                Debug.LogError("Not found");
+                currency.Amount = amount;
+
+                // Invoke currency change event
+                currency.InvokeChangeEvent(0);
+
                 return;
             }
 
-            var currency = s_currencies.Span[link];
-            currency.Amount = amount;
+            Debug.LogError("Not found!");
 
-            // Change save state to required
-
-            // Invoke currency change event
-            currency.InvokeChangeEvent(0);
         }
 
         public static void Add(CurrencyType currencyType, int amount)
         {
-            int link = FindLinkByType(currencyType);
+            if (s_currenyCacheBuyId.TryGetValue(currencyType, out var currency))
+            {
+                currency.Amount += amount;
 
-            var currency = s_currencies.Span[link];
-            currency.Amount += amount;
+                // Invoke currency change event
+                currency.InvokeChangeEvent(amount);
 
-            // Change save state to required
+                return;
+            }
 
-            // Invoke currency change event
-            currency.InvokeChangeEvent(amount);
+            Debug.LogError("Not found!");
         }
 
         public static void Substract(CurrencyType currencyType, int amount)
         {
-            int link = FindLinkByType(currencyType);
+            if (s_currenyCacheBuyId.TryGetValue(currencyType, out var currency))
+            {
+                currency.Amount -= amount;
 
-            var currency = s_currencies.Span[link];
+                // Invoke currency change event
+                currency.InvokeChangeEvent(-amount);
 
-            currency.Amount -= amount;
+                return;
+            }
 
-            // Change save to required
-
-            // Invoke currency change event
-            currency.InvokeChangeEvent(-amount);
+            Debug.LogError("Not found!");
         }
 
-        public static void SubscribeGlobalCallback(CurrencyChangeDelegate currencyChange)
+        #endregion
+
+
+        // Save currency amounts to PlayerPrefs
+        private void SaveCurrency()
         {
-            for (int i = 0; i < s_currencies.Length; i++)
+            foreach (var currency in _currencies)
             {
-                s_currencies.Span[i].OnCurrencyChange += currencyChange;
+                PlayerPrefs.SetInt(currency.CurrencyType.ToString(), currency.Amount);
             }
+            PlayerPrefs.Save();
         }
 
-        public static void UnsubscribeGlobalCallback(CurrencyChangeDelegate currencyChange)
+        // Load currency amounts from PlayerPrefs
+        private void LoadCurrency()
         {
-            for (int i = 0; i < s_currencies.Length; i++)
+            foreach(var currency in _currencies)
             {
-                s_currencies.Span[i].OnCurrencyChange -= currencyChange;
+                if (PlayerPrefs.HasKey(currency.CurrencyType.ToString()))
+                {
+                    s_currenyCacheBuyId[currency.CurrencyType].Amount = PlayerPrefs.GetInt(currency.CurrencyType.ToString());
+                }
             }
-        }
-
-        public static void InvokeOrSubcrtibe(Action callback)
-        {
-            if (s_isInitialized)
-            {
-                callback?.Invoke();
-            }
-            else
-            {
-                onInital += callback;
-            }
-        }
-
-        private static int FindLinkByType(CurrencyType currencyType)
-        {
-            if (s_currenciesLinks.TryGetValue(currencyType, out var link))
-                return link;
-
-            return -1;
+            
         }
     }
 }

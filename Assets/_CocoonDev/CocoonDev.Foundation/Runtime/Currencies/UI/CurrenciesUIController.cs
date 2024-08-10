@@ -1,15 +1,24 @@
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace CocoonDev.Foundation
 {
-    public class CurrenciesUIController : Singleton<CurrenciesUIController>
+    public class CurrenciesUIController : MonoBehaviour
     {
         [SerializeField]
         private CurrencyUIPanel[] _currencyUIPanels;
 
-        private Dictionary<CurrencyType, CurrencyUIPanel> _currencyUIPanelLinks;
+        private static Dictionary<CurrencyType, CurrencyUIPanel> s_currencyUIPanelCacheById  = new();
+
+
+#if UNITY_EDITOR
+        /// <seealso href="https://docs.unity3d.com/Manual/DomainReloading.html"/>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void Init()
+        {
+            s_currencyUIPanelCacheById = new();
+        }
+#endif
 
         private void Start()
         {
@@ -18,26 +27,26 @@ namespace CocoonDev.Foundation
 
         public void Initialize()
         {
-            _currencyUIPanelLinks = new Dictionary<CurrencyType, CurrencyUIPanel>();
-
             for (int i = 0; i < _currencyUIPanels.Length; i++)
             {
                 var currencyUIPanel = _currencyUIPanels[i];
-                if (!_currencyUIPanelLinks.ContainsKey(currencyUIPanel.CurrencyType))
+                if (!s_currencyUIPanelCacheById.ContainsKey(currencyUIPanel.CurrencyType))
                 {
-                    _currencyUIPanelLinks.Add(currencyUIPanel.CurrencyType, currencyUIPanel);
-                    currencyUIPanel.Initialize(CurrenciesController.GetCurrencyByType(currencyUIPanel.CurrencyType));
-                    currencyUIPanel.Show();
+                    s_currencyUIPanelCacheById.Add(currencyUIPanel.CurrencyType, currencyUIPanel);
+                    currencyUIPanel.Initialize();
                 }
             }
         }
 
-        public CurrencyUIPanel GetCurrencyUIPanel(CurrencyType currencyType)
+        #region Static Methods
+        public CurrencyUIPanel Of(CurrencyType currencyType)
         {
-            if(_currencyUIPanelLinks.TryGetValue(currencyType, out var currencyUIPanel)) 
+            if (s_currencyUIPanelCacheById.TryGetValue(currencyType, out var currencyUIPanel))
                 return currencyUIPanel;
 
             return null;
         }
+        #endregion
+
     }
 }

@@ -21,21 +21,12 @@ namespace CocoonDev.Foundation
         [SerializeField, Required]
         private TextMeshProUGUI _valueText;
 
-        public void Initialize( FloatingOptions options)
-        {
-            InitializeAndForget( options).Forget();
-        }
 
-        public async UniTaskVoid InitializeAndForget( FloatingOptions options)
+        public async UniTask InitializeAsync(FloatingSettings settings)
         {
-            await InitializeAsync(options);
-        }
-
-        public async UniTask InitializeAsync(FloatingOptions options)
-        {
-            await FloatingUIAnimateHelper.FloatingAsync(_rectTransform
+            await FloatingUIHelper.FloatingAsync(_rectTransform
                 , _canvasGroup
-                , options);
+                , settings);
         }
 
         public void SetUIData(FloatingUIData data)
@@ -60,7 +51,7 @@ namespace CocoonDev.Foundation
         public void OnReturnToPool()
         {
             _rectTransform.position = Vector2.zero;
-            _canvasGroup.alpha = 1;
+          
         }
 
         

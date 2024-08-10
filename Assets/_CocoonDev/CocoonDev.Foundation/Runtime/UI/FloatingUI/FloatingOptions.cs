@@ -18,16 +18,19 @@ namespace CocoonDev.Foundation
 
     public readonly struct FloatingSettings
     {
-        public readonly float Duration;
+        public readonly FloatingMode FloatingMode;
         public readonly Vector2 FinalPosition;
+        public readonly float Duration;
         public readonly Action OnComplete;
 
-        public FloatingSettings(float duration
+        public FloatingSettings(FloatingMode floatingMode
             , Vector2 finalPosition
+            , float duration
             , Action onComplete)
         {
-            Duration = duration;
+            FloatingMode = floatingMode;
             FinalPosition = finalPosition;
+            Duration = duration;
             OnComplete = onComplete;
         }
     }
@@ -47,7 +50,7 @@ namespace CocoonDev.Foundation
     public enum FloatingMode
     {
         None,
-        Parabolic,
+        Curve,
         Verticel,
     }
 }

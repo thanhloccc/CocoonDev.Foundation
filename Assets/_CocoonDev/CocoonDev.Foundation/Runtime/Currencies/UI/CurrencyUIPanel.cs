@@ -19,15 +19,14 @@ namespace CocoonDev.Foundation
         private bool _updateOnChange = true;
         [SerializeField]
         private bool _useFormattedAmount = true;
+        [SerializeField]
+        private bool _applyTween;
 
         [Space]
         [SerializeField, Required]
         private TextMeshProUGUI _textAmount;
-        [SerializeField, Required]
-        private Image _icon;
 
         private RectTransform _rectTransform;
-        private Currency _currency;
 
         public RectTransform RectTransform
         {
@@ -45,33 +44,23 @@ namespace CocoonDev.Foundation
             get => _currencyType;
         }
 
-        private void Awake()
+       
+        public void Initialize()
         {
-            _rectTransform = GetComponent<RectTransform>();
-
-            if (_initialiseOnStart)
-            {
-                Debug.Log("Check is here!");
-            }
-        }
-
-        public void Initialize(Currency currency)
-        {
-            _currency = currency;
 
             Redraw();
             if (_updateOnChange)
             {
-                _currency.OnCurrencyChange += OnCurrencyAmountChanged;
+                CurrenciesController.Of(_currencyType).OnCurrencyChange += OnCurrencyAmountChanged;
             }
         }
 
         public void Cleanup()
         {
-            Hide();
+       
             if (_updateOnChange)
             {
-                _currency.OnCurrencyChange -= OnCurrencyAmountChanged;
+                CurrenciesController.Of(_currencyType).OnCurrencyChange -= OnCurrencyAmountChanged;
             }
         }
 
@@ -79,51 +68,42 @@ namespace CocoonDev.Foundation
         {
             if (_useFormattedAmount)
             {
-                _textAmount.TrySetText(_currency.AmountFormatted);
+                _textAmount.TrySetText(CurrenciesController.Of(_currencyType).AmountFormatted);
             }
             else
             {
                 using (var stringBuiler = ZString.CreateStringBuilder())
                 {
-                    stringBuiler.Append(_currency.Amount);
+                    stringBuiler.Append(CurrenciesController.GetAmountById(_currencyType));
                     _textAmount.TrySetText(stringBuiler);
                 }
             }
           
         }
 
-        public void SetAmount(int amount, bool format = true)
-        {
-        }
-
-        public void Show()
-        {
-            
-        }
-
-        public void Hide()
-        {
-            
-        }
 
         private void OnCurrencyAmountChanged(Currency currency, int amountDifference)
         {
             if (_useFormattedAmount)
             {
-                _textAmount.TrySetText(_currency.AmountFormatted);
+                _textAmount.TrySetText(currency.AmountFormatted);
             }
             else
             {
                 using (var stringBuiler = ZString.CreateStringBuilder())
                 {
-                    stringBuiler.Append(_currency.Amount);
+                    stringBuiler.Append(currency.Amount);
                     _textAmount.TrySetText(stringBuiler);
                 }
             }
 
-            var sequence = Sequence.Create()
+            if (_applyTween)
+            {
+                var sequence = Sequence.Create()
                 .Chain(Tween.Scale(_rectTransform, 1.1F, 0.15F, Ease.OutQuad))
                 .Chain(Tween.Scale(_rectTransform, 1, 0.15F, Ease.InQuad));
+            }
+           
         }
     }
 }

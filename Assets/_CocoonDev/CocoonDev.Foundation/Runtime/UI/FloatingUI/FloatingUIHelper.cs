@@ -4,24 +4,24 @@ using UnityEngine;
 
 namespace CocoonDev.Foundation
 {
-    public sealed class FloatingUIAnimateHelper
+    public sealed class FloatingUIHelper
     {
         public static async UniTask FloatingAsync([NotNull] RectTransform rectTransform
             , [NotNull] CanvasGroup canvasGroup
-            , FloatingOptions options)
+            , FloatingSettings settings)
         {
-            switch (options.FloatingMode)
+            switch (settings.FloatingMode)
             {
                 case FloatingMode.None:
                     Debug.LogWarning("[FloatingUI]");
                     break;
 
-                case FloatingMode.Parabolic:
-                    await FloatingParabolicAsync(rectTransform, canvasGroup, options.Settings);
+                case FloatingMode.Curve:
+                    await FloatingParabolicAsync(rectTransform, canvasGroup, settings);
                     break;
 
                 case FloatingMode.Verticel:
-                    await FloatingVerticleAsync(rectTransform, canvasGroup, options.Settings);
+                    await FloatingVerticleAsync(rectTransform, canvasGroup, settings);
                     break;
 
                 default:
@@ -35,7 +35,7 @@ namespace CocoonDev.Foundation
             , FloatingSettings settings)
         {
 
-            await new FloatingUIAnimate().FloatingParabolicAsync(rectTransform
+            await new FloatingUICase().FloatingCurveAsync(rectTransform
                        , canvasGroup
                        , settings.FinalPosition
                        , settings.Duration
@@ -47,7 +47,7 @@ namespace CocoonDev.Foundation
             , FloatingSettings settings)
         {
 
-            await new FloatingUIAnimate().FloatingVerticalAsync(rectTransform
+            await new FloatingUICase().FloatingVerticalAsync(rectTransform
                        , canvasGroup
                        , settings.FinalPosition
                        , settings.Duration
