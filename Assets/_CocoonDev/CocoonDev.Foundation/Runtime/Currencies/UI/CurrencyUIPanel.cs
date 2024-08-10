@@ -12,9 +12,6 @@ namespace CocoonDev.Foundation
         [SerializeField]
         private CurrencyType _currencyType;
 
-        [Space]
-        [SerializeField]
-        private bool _initialiseOnStart = true;
         [SerializeField]
         private bool _updateOnChange = true;
         [SerializeField]
@@ -24,9 +21,9 @@ namespace CocoonDev.Foundation
 
         [Space]
         [SerializeField, Required]
-        private TextMeshProUGUI _textAmount;
-
         private RectTransform _rectTransform;
+        [SerializeField, Required]
+        private TextMeshProUGUI _textAmount;
 
         public RectTransform RectTransform
         {
