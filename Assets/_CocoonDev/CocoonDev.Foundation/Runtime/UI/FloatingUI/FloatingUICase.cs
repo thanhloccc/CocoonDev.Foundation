@@ -17,7 +17,7 @@ namespace CocoonDev.Foundation
             Vector2 positionCircle = originPosition.RandomPositionInCircle(250);
 
             Sequence sequence = Sequence.Create();
-            await sequence.Chain(Tween.Position(rectTransform, positionCircle, duration * 30 / 100 , Ease.InQuad))
+            await sequence.Group(Tween.Position(rectTransform, positionCircle, duration * 30 / 100 , Ease.InQuad))
                 .Group(Tween.Position(rectTransform, finalPosition, duration, Ease.OutQuad, startDelay: duration * 70 /100))
                 .Group(Tween.Alpha(canvasGroup, 0, 0.2F, Ease.OutQuad, startDelay: duration - 0.2F))
                 .OnComplete(() => onComplete?.Invoke());
