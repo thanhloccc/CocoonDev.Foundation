@@ -25,8 +25,8 @@ namespace CocoonDev.Foundation
 
         public FloatingSettings(FloatingMode floatingMode
             , Vector2 finalPosition
-            , float duration
-            , Action onComplete)
+            , float duration = 1
+            , Action onComplete = null)
         {
             FloatingMode = floatingMode;
             FinalPosition = finalPosition;
