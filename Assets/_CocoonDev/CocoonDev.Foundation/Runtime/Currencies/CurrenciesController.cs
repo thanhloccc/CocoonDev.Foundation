@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace CocoonDev.Foundation
 {
+    [DefaultExecutionOrder(-998)]
     public class CurrenciesController : MonoBehaviour
     {
         private static CurrenciesController s_instance;
