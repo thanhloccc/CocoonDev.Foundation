@@ -39,7 +39,7 @@ namespace CocoonDev.Foundation
         }
 
         #region Static Methods
-        public CurrencyUIPanel Of(CurrencyType currencyType)
+        public static CurrencyUIPanel Of(CurrencyType currencyType)
         {
             if (s_currencyUIPanelCacheById.TryGetValue(currencyType, out var currencyUIPanel))
                 return currencyUIPanel;
