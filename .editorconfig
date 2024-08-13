@@ -5,9 +5,9 @@ root = true
 [*]
 
 # Indentation and spacing
-indent_size = 4
+indent_size = 10
 indent_style = space
-tab_width = 4
+tab_width = 10
 charset = utf-8
 
 # New line preferences
@@ -314,8 +314,8 @@ dotnet_naming_symbols.public_or_protected_fields.applicable_accessibilities = pu
 
 [*.{cs,vb}]
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
-tab_width = 4
-indent_size = 4
+tab_width = 10
+indent_size = 8
 end_of_line = lf
 dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
