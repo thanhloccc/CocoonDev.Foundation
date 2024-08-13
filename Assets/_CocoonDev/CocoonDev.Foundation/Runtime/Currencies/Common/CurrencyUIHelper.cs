@@ -8,10 +8,10 @@ namespace CocoonDev.Foundation
 
                 private static readonly Vector2[] PANEL_SIZES = new Vector2[]
                 {
-                        new Vector2(148.5f, 50),
-                        new Vector2(-150, 50),
-                        new Vector2(-500f, 30),
-                        new Vector2(-150, 30),
+                        new Vector2(-390F, 50),
+                        new Vector2(390, 50),
+                        new Vector2(50, 30),
+                        new Vector2(390, 30),
                  };
 
                 public static Vector2 GetPanelSize(int charactersCount)
